@@ -22,10 +22,14 @@ function getCanvasSize() {
   return { width: w, heigth: h };
 }
 
-const Canvas: FC<{ image: HTMLImageElement }> = ({ image }) => {
+const Canvas: FC<{ image: HTMLImageElement; logo: HTMLImageElement | null }> = ({ image,logo }) => {
   const [result, setResult] = useState("");
 
   useEffect(() => {
+    if (image === null || logo === null) {
+      return;
+    }
+
     const { width, heigth } = getCanvasSize();
     const canvas = document.createElement("canvas");
     canvas.width = width;
@@ -40,6 +44,19 @@ const Canvas: FC<{ image: HTMLImageElement }> = ({ image }) => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const imageSize = (bgColor[0] !== bgColor2[0] || bgColor[1] !== bgColor2[1] || bgColor[0] !== bgColor3[0] || bgColor[1] !== bgColor3[1]) ? canvas.width : Math.floor((canvas.width * 6) / 7);
+
+    const logoWidth = imageSize / 4;
+    const logoHeight = logoWidth * 0.85;
+
+    ctx.drawImage(
+      logo,
+      (imageSize - logoWidth) / 2,
+      (canvas.height - imageSize - logoHeight) / 2,
+      logoWidth,
+      logoHeight
+    );
+
+
     ctx.drawImage(image, (canvas.width - imageSize) / 2, canvas.height - imageSize, imageSize, imageSize);
 
     const dataUrl = canvas.toDataURL("image/png");
@@ -57,8 +74,19 @@ const WallpaperPage: FC = () => {
   const router = useRouter();
   const { id } = router.query as { id: string };
   const [image, setImage] = useState<HTMLImageElement | null>(null);
+  const [logo, setLogo] = useState<HTMLImageElement | null>(null);
 
   const { data } = useSWR(id ? getApiUrl(id) : null, fetcher);
+
+  useEffect(() => {
+    const i = new Image();
+    i.src = "/logo.svg";
+
+    i.crossOrigin = "Anonymous";
+    i.onload = function () {
+      setLogo(i);
+    };
+  }, []);
 
   useEffect(() => {
     if (!data?.image) {
@@ -76,7 +104,7 @@ const WallpaperPage: FC = () => {
     return <Loading />;
   }
 
-  return <Canvas image={image} />;
+  return <Canvas image={image} logo={logo}/>;
 };
 
 export default WallpaperPage;
