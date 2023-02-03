@@ -51,7 +51,7 @@ const Canvas: FC<{ image: HTMLImageElement; logo: HTMLImageElement | null }> = (
     ctx.drawImage(
       logo,
       (imageSize - logoWidth) / 2,
-      (canvas.height - imageSize - logoHeight) / 2,
+      (canvas.height - imageSize - logoHeight) / 1.5,
       logoWidth,
       logoHeight
     );
