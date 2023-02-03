@@ -46,7 +46,7 @@ const Canvas: FC<{ image: HTMLImageElement; logo: HTMLImageElement | null }> = (
     const imageSize = (bgColor[0] !== bgColor2[0] || bgColor[1] !== bgColor2[1] || bgColor[0] !== bgColor3[0] || bgColor[1] !== bgColor3[1]) ? canvas.width : Math.floor((canvas.width * 6) / 7);
 
     const logoWidth = imageSize / 3;
-    const logoHeight = logoWidth * 0.85;
+    const logoHeight = logoWidth * 0.93;
 
     ctx.drawImage(
       logo,
